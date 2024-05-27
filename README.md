@@ -1,4 +1,4 @@
-# BaiduPCS-Go 百度网盘客户端(加强版)
+# BaiduPCS-Go 百度网盘客户端
 
 
 仿 Linux shell 文件处理命令的百度网盘命令行客户端.
@@ -1129,4 +1129,3 @@ cli交互模式下, 运行命令 `config reset`
 
 # 交流反馈
 
-提交Issue: [Issues](https://github.com/qjfoidnh/BaiduPCS-Go/issues)
