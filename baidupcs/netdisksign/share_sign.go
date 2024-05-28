@@ -3,8 +3,8 @@ package netdisksign
 import (
 	"crypto/md5"
 	"encoding/hex"
-	"github.com/qjfoidnh/BaiduPCS-Go/pcsutil/cachepool"
-	"github.com/qjfoidnh/BaiduPCS-Go/pcsutil/converter"
+	"github.com/milin2436/BaiduPCS-Go/pcsutil/cachepool"
+	"github.com/milin2436/BaiduPCS-Go/pcsutil/converter"
 	"strconv"
 )
 

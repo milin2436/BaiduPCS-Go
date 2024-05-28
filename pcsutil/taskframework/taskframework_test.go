@@ -2,7 +2,7 @@ package taskframework_test
 
 import (
 	"fmt"
-	"github.com/qjfoidnh/BaiduPCS-Go/pcsutil/taskframework"
+	"github.com/milin2436/BaiduPCS-Go/pcsutil/taskframework"
 	"testing"
 	"time"
 )

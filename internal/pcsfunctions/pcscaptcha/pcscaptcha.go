@@ -3,7 +3,7 @@
 package pcscaptcha
 
 import (
-	"github.com/qjfoidnh/BaiduPCS-Go/internal/pcsconfig"
+	"github.com/milin2436/BaiduPCS-Go/internal/pcsconfig"
 	"os"
 	"path/filepath"
 )

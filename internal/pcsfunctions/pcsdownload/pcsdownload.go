@@ -1,8 +1,8 @@
 package pcsdownload
 
 import (
-	"github.com/qjfoidnh/BaiduPCS-Go/baidupcs"
-	"github.com/qjfoidnh/BaiduPCS-Go/requester"
+	"github.com/milin2436/BaiduPCS-Go/baidupcs"
+	"github.com/milin2436/BaiduPCS-Go/requester"
 	"net/http"
 	"strconv"
 )

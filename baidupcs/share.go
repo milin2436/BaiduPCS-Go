@@ -4,7 +4,7 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/qjfoidnh/BaiduPCS-Go/baidupcs/pcserror"
+	"github.com/milin2436/BaiduPCS-Go/baidupcs/pcserror"
 )
 
 type (

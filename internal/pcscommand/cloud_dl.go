@@ -2,7 +2,7 @@ package pcscommand
 
 import (
 	"fmt"
-	"github.com/qjfoidnh/BaiduPCS-Go/baidupcs"
+	"github.com/milin2436/BaiduPCS-Go/baidupcs"
 )
 
 // RunCloudDlAddTask 执行添加离线下载任务

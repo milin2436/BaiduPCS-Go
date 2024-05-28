@@ -1,9 +1,9 @@
 package panhome
 
 import (
-	"github.com/qjfoidnh/Baidu-Login/bdcrypto"
-	"github.com/qjfoidnh/BaiduPCS-Go/baidupcs/netdisksign"
-	"github.com/qjfoidnh/BaiduPCS-Go/pcsutil/converter"
+	"github.com/iikira/Baidu-Login/bdcrypto"
+	"github.com/milin2436/BaiduPCS-Go/baidupcs/netdisksign"
+	"github.com/milin2436/BaiduPCS-Go/pcsutil/converter"
 )
 
 type (

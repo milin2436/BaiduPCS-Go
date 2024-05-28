@@ -8,11 +8,11 @@ import (
 	"net/url"
 	"strconv"
 
-	"github.com/qjfoidnh/BaiduPCS-Go/baidupcs/expires/cachemap"
-	"github.com/qjfoidnh/BaiduPCS-Go/baidupcs/internal/panhome"
-	"github.com/qjfoidnh/BaiduPCS-Go/baidupcs/pcserror"
-	"github.com/qjfoidnh/BaiduPCS-Go/pcsverbose"
-	"github.com/qjfoidnh/BaiduPCS-Go/requester"
+	"github.com/milin2436/BaiduPCS-Go/baidupcs/expires/cachemap"
+	"github.com/milin2436/BaiduPCS-Go/baidupcs/internal/panhome"
+	"github.com/milin2436/BaiduPCS-Go/baidupcs/pcserror"
+	"github.com/milin2436/BaiduPCS-Go/pcsverbose"
+	"github.com/milin2436/BaiduPCS-Go/requester"
 )
 
 const (

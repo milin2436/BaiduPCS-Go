@@ -2,7 +2,7 @@ package baidupcs
 
 import (
 	"fmt"
-	"github.com/qjfoidnh/BaiduPCS-Go/requester"
+	"github.com/milin2436/BaiduPCS-Go/requester"
 	"github.com/tidwall/gjson"
 	"io/ioutil"
 	"net/http"

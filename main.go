@@ -15,22 +15,22 @@ import (
 
 	"github.com/olekukonko/tablewriter"
 	"github.com/peterh/liner"
-	"github.com/qjfoidnh/BaiduPCS-Go/baidupcs"
-	"github.com/qjfoidnh/BaiduPCS-Go/internal/pcscommand"
-	"github.com/qjfoidnh/BaiduPCS-Go/internal/pcsconfig"
-	"github.com/qjfoidnh/BaiduPCS-Go/internal/pcsfunctions/pcsdownload"
-	_ "github.com/qjfoidnh/BaiduPCS-Go/internal/pcsinit"
-	"github.com/qjfoidnh/BaiduPCS-Go/internal/pcsupdate"
-	"github.com/qjfoidnh/BaiduPCS-Go/pcsliner"
-	"github.com/qjfoidnh/BaiduPCS-Go/pcsliner/args"
-	"github.com/qjfoidnh/BaiduPCS-Go/pcstable"
-	"github.com/qjfoidnh/BaiduPCS-Go/pcsutil"
-	"github.com/qjfoidnh/BaiduPCS-Go/pcsutil/checksum"
-	"github.com/qjfoidnh/BaiduPCS-Go/pcsutil/converter"
-	"github.com/qjfoidnh/BaiduPCS-Go/pcsutil/escaper"
-	"github.com/qjfoidnh/BaiduPCS-Go/pcsutil/getip"
-	"github.com/qjfoidnh/BaiduPCS-Go/pcsutil/pcstime"
-	"github.com/qjfoidnh/BaiduPCS-Go/pcsverbose"
+	"github.com/milin2436/BaiduPCS-Go/baidupcs"
+	"github.com/milin2436/BaiduPCS-Go/internal/pcscommand"
+	"github.com/milin2436/BaiduPCS-Go/internal/pcsconfig"
+	"github.com/milin2436/BaiduPCS-Go/internal/pcsfunctions/pcsdownload"
+	_ "github.com/milin2436/BaiduPCS-Go/internal/pcsinit"
+	"github.com/milin2436/BaiduPCS-Go/internal/pcsupdate"
+	"github.com/milin2436/BaiduPCS-Go/pcsliner"
+	"github.com/milin2436/BaiduPCS-Go/pcsliner/args"
+	"github.com/milin2436/BaiduPCS-Go/pcstable"
+	"github.com/milin2436/BaiduPCS-Go/pcsutil"
+	"github.com/milin2436/BaiduPCS-Go/pcsutil/checksum"
+	"github.com/milin2436/BaiduPCS-Go/pcsutil/converter"
+	"github.com/milin2436/BaiduPCS-Go/pcsutil/escaper"
+	"github.com/milin2436/BaiduPCS-Go/pcsutil/getip"
+	"github.com/milin2436/BaiduPCS-Go/pcsutil/pcstime"
+	"github.com/milin2436/BaiduPCS-Go/pcsverbose"
 	"github.com/urfave/cli"
 )
 
@@ -97,7 +97,7 @@ func main() {
 	app := cli.NewApp()
 	app.Name = "BaiduPCS-Go"
 	app.Version = Version
-	app.Author = "qjfoidnh/BaiduPCS-Go: https://github.com/qjfoidnh/BaiduPCS-Go"
+	app.Author = "qjfoidnh/BaiduPCS-Go: https://github.com/milin2436/BaiduPCS-Go"
 	app.Copyright = "(c) 2016-2020 iikira."
 	app.Usage = "百度网盘客户端 for " + runtime.GOOS + "/" + runtime.GOARCH
 	app.Description = `BaiduPCS-Go 使用Go语言编写的百度网盘命令行客户端, 为操作百度网盘, 提供实用功能.
@@ -108,12 +108,12 @@ func main() {
 		下载网盘内文件, 支持网盘内目录 (文件夹) 下载, 支持多个文件或目录下载, 支持断点续传和高并发高速下载.
 
 	---------------------------------------------------
-	前往 https://github.com/qjfoidnh/BaiduPCS-Go 以获取更多帮助信息!
-	前往 https://github.com/qjfoidnh/BaiduPCS-Go/releases 以获取程序更新信息!
+	前往 https://github.com/milin2436/BaiduPCS-Go 以获取更多帮助信息!
+	前往 https://github.com/milin2436/BaiduPCS-Go/releases 以获取程序更新信息!
 	---------------------------------------------------
 
 	交流反馈:
-		提交Issue: https://github.com/qjfoidnh/BaiduPCS-Go/issues
+		提交Issue: https://github.com/milin2436/BaiduPCS-Go/issues
 		邮箱: qjfoidnh@126.com`
 
 	app.Flags = []cli.Flag{
@@ -609,7 +609,7 @@ func main() {
 			Description: `
 	设定当前登录帐号的accessToken:
 	若不使用秒传链接转存, 可不设定; accessToken申请及获取教程:
-	https://github.com/qjfoidnh/BaiduPCS-Go/wiki/accessToken%E8%8E%B7%E5%8F%96%E6%95%99%E7%A8%8B
+	https://github.com/milin2436/BaiduPCS-Go/wiki/accessToken%E8%8E%B7%E5%8F%96%E6%95%99%E7%A8%8B
 	注意accessToken的有效期为一个月, 过期后请按教程指导更新token
 
 	示例:

@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/qjfoidnh/BaiduPCS-Go/baidupcs"
+	"github.com/milin2436/BaiduPCS-Go/baidupcs"
 )
 
 // RunShareTransfer 执行分享链接转存到网盘

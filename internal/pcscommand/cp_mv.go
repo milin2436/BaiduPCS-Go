@@ -2,8 +2,8 @@ package pcscommand
 
 import (
 	"fmt"
-	"github.com/qjfoidnh/BaiduPCS-Go/baidupcs"
-	"github.com/qjfoidnh/BaiduPCS-Go/baidupcs/pcserror"
+	"github.com/milin2436/BaiduPCS-Go/baidupcs"
+	"github.com/milin2436/BaiduPCS-Go/baidupcs/pcserror"
 	"path"
 	"strings"
 )

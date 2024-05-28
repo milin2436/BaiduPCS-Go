@@ -3,7 +3,7 @@ package taskframework
 import (
 	"github.com/GeertJohan/go.incremental"
 	"github.com/oleiade/lane"
-	"github.com/qjfoidnh/BaiduPCS-Go/pcsutil/waitgroup"
+	"github.com/milin2436/BaiduPCS-Go/pcsutil/waitgroup"
 	"strconv"
 	"time"
 )

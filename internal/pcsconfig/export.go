@@ -3,10 +3,10 @@ package pcsconfig
 import (
 	"fmt"
 	"github.com/olekukonko/tablewriter"
-	"github.com/qjfoidnh/BaiduPCS-Go/baidupcs"
-	"github.com/qjfoidnh/BaiduPCS-Go/pcstable"
-	"github.com/qjfoidnh/BaiduPCS-Go/pcsutil/converter"
-	"github.com/qjfoidnh/BaiduPCS-Go/requester"
+	"github.com/milin2436/BaiduPCS-Go/baidupcs"
+	"github.com/milin2436/BaiduPCS-Go/pcstable"
+	"github.com/milin2436/BaiduPCS-Go/pcsutil/converter"
+	"github.com/milin2436/BaiduPCS-Go/requester"
 	"os"
 	"strconv"
 )

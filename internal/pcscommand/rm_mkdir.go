@@ -2,7 +2,7 @@ package pcscommand
 
 import (
 	"fmt"
-	"github.com/qjfoidnh/BaiduPCS-Go/pcstable"
+	"github.com/milin2436/BaiduPCS-Go/pcstable"
 	"os"
 	"strconv"
 )

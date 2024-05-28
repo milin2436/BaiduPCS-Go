@@ -2,7 +2,7 @@ package pcsutil_test
 
 import (
 	"fmt"
-	"github.com/qjfoidnh/BaiduPCS-Go/pcsutil"
+	"github.com/milin2436/BaiduPCS-Go/pcsutil"
 	"testing"
 )
 

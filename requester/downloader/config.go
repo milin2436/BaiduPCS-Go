@@ -1,7 +1,7 @@
 package downloader
 
 import (
-	"github.com/qjfoidnh/BaiduPCS-Go/requester/transfer"
+	"github.com/milin2436/BaiduPCS-Go/requester/transfer"
 )
 
 const (

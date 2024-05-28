@@ -2,8 +2,8 @@ package baidupcs
 
 import (
 	"errors"
-	"github.com/qjfoidnh/BaiduPCS-Go/pcstable"
-	"github.com/qjfoidnh/BaiduPCS-Go/pcsutil"
+	"github.com/milin2436/BaiduPCS-Go/pcstable"
+	"github.com/milin2436/BaiduPCS-Go/pcsutil"
 	"github.com/json-iterator/go"
 	"path"
 	"strconv"

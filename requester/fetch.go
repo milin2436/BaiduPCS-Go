@@ -3,7 +3,7 @@ package requester
 import (
 	"bytes"
 	"fmt"
-	"github.com/qjfoidnh/BaiduPCS-Go/requester/rio"
+	"github.com/milin2436/BaiduPCS-Go/requester/rio"
 	"io"
 	"io/ioutil"
 	"net/http"

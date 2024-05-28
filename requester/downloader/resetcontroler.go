@@ -1,7 +1,7 @@
 package downloader
 
 import (
-	"github.com/qjfoidnh/BaiduPCS-Go/baidupcs/expires"
+	"github.com/milin2436/BaiduPCS-Go/baidupcs/expires"
 	"sync"
 	"time"
 )

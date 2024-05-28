@@ -2,7 +2,7 @@
 package getip
 
 import (
-	"github.com/qjfoidnh/BaiduPCS-Go/requester"
+	"github.com/milin2436/BaiduPCS-Go/requester"
 	"net"
 	"net/http"
 	"unsafe"

@@ -3,8 +3,8 @@ package uploader
 import (
 	"bufio"
 	"fmt"
-	"github.com/qjfoidnh/BaiduPCS-Go/requester/rio/speeds"
-	"github.com/qjfoidnh/BaiduPCS-Go/requester/transfer"
+	"github.com/milin2436/BaiduPCS-Go/requester/rio/speeds"
+	"github.com/milin2436/BaiduPCS-Go/requester/transfer"
 	"io"
 	"os"
 	"sync"

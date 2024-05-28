@@ -2,7 +2,7 @@ package pcsverbose
 
 import (
 	"fmt"
-	"github.com/qjfoidnh/BaiduPCS-Go/pcsutil/pcstime"
+	"github.com/milin2436/BaiduPCS-Go/pcsutil/pcstime"
 	"io"
 	"io/ioutil"
 )

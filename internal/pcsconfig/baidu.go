@@ -8,11 +8,11 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/iikira/baidu-tools/tieba"
+	"github.com/milin2436/BaiduPCS-Go/baidupcs"
+	"github.com/milin2436/BaiduPCS-Go/pcstable"
+	"github.com/milin2436/BaiduPCS-Go/pcsutil/converter"
 	"github.com/olekukonko/tablewriter"
-	"github.com/qjfoidnh/BaiduPCS-Go/baidupcs"
-	"github.com/qjfoidnh/BaiduPCS-Go/pcstable"
-	"github.com/qjfoidnh/BaiduPCS-Go/pcsutil/converter"
-	"github.com/qjfoidnh/baidu-tools/tieba"
 )
 
 var (

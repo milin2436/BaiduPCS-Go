@@ -1,7 +1,7 @@
 package cachepool
 
 import (
-	"github.com/qjfoidnh/BaiduPCS-Go/pcsutil/converter"
+	"github.com/milin2436/BaiduPCS-Go/pcsutil/converter"
 	"runtime"
 	"sync"
 )

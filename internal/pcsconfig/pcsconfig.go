@@ -3,11 +3,11 @@ package pcsconfig
 
 import (
 	"github.com/json-iterator/go"
-	"github.com/qjfoidnh/BaiduPCS-Go/baidupcs"
-	"github.com/qjfoidnh/BaiduPCS-Go/pcsutil"
-	"github.com/qjfoidnh/BaiduPCS-Go/pcsutil/jsonhelper"
-	"github.com/qjfoidnh/BaiduPCS-Go/pcsverbose"
-	"github.com/qjfoidnh/BaiduPCS-Go/requester"
+	"github.com/milin2436/BaiduPCS-Go/baidupcs"
+	"github.com/milin2436/BaiduPCS-Go/pcsutil"
+	"github.com/milin2436/BaiduPCS-Go/pcsutil/jsonhelper"
+	"github.com/milin2436/BaiduPCS-Go/pcsverbose"
+	"github.com/milin2436/BaiduPCS-Go/requester"
 	"os"
 	"path/filepath"
 	"runtime"

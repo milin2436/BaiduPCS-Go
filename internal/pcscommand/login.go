@@ -3,10 +3,10 @@ package pcscommand
 import (
 	"bytes"
 	"fmt"
-	baidulogin "github.com/qjfoidnh/Baidu-Login"
-	"github.com/qjfoidnh/BaiduPCS-Go/internal/pcsfunctions/pcscaptcha"
-	"github.com/qjfoidnh/BaiduPCS-Go/pcsliner"
-	"github.com/qjfoidnh/BaiduPCS-Go/requester"
+	baidulogin "github.com/iikira/Baidu-Login"
+	"github.com/milin2436/BaiduPCS-Go/internal/pcsfunctions/pcscaptcha"
+	"github.com/milin2436/BaiduPCS-Go/pcsliner"
+	"github.com/milin2436/BaiduPCS-Go/requester"
 	"image/png"
 	"io/ioutil"
 	"strings"
@@ -126,7 +126,7 @@ for_1:
 				} else {
 					vcode_raw = ""
 					vcodestr = ""
-						goto BEGIN
+					goto BEGIN
 				}
 				// 登录成功
 				return nlj.Data.BDUSS, nlj.Data.PToken, nlj.Data.SToken, nlj.Data.CookieString, nil

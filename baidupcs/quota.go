@@ -1,7 +1,7 @@
 package baidupcs
 
 import (
-	"github.com/qjfoidnh/BaiduPCS-Go/baidupcs/pcserror"
+	"github.com/milin2436/BaiduPCS-Go/baidupcs/pcserror"
 )
 
 type quotaInfo struct {
