@@ -13,8 +13,6 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/olekukonko/tablewriter"
-	"github.com/peterh/liner"
 	"github.com/milin2436/BaiduPCS-Go/baidupcs"
 	"github.com/milin2436/BaiduPCS-Go/internal/pcscommand"
 	"github.com/milin2436/BaiduPCS-Go/internal/pcsconfig"
@@ -31,6 +29,8 @@ import (
 	"github.com/milin2436/BaiduPCS-Go/pcsutil/getip"
 	"github.com/milin2436/BaiduPCS-Go/pcsutil/pcstime"
 	"github.com/milin2436/BaiduPCS-Go/pcsverbose"
+	"github.com/olekukonko/tablewriter"
+	"github.com/peterh/liner"
 	"github.com/urfave/cli"
 )
 
@@ -97,7 +97,7 @@ func main() {
 	app := cli.NewApp()
 	app.Name = "BaiduPCS-Go"
 	app.Version = Version
-	app.Author = "qjfoidnh/BaiduPCS-Go: https://github.com/milin2436/BaiduPCS-Go"
+	app.Author = "BaiduPCS-Go: https://github.com/milin2436/BaiduPCS-Go"
 	app.Copyright = "(c) 2016-2020 iikira."
 	app.Usage = "百度网盘客户端 for " + runtime.GOOS + "/" + runtime.GOARCH
 	app.Description = `BaiduPCS-Go 使用Go语言编写的百度网盘命令行客户端, 为操作百度网盘, 提供实用功能.
@@ -114,7 +114,7 @@ func main() {
 
 	交流反馈:
 		提交Issue: https://github.com/milin2436/BaiduPCS-Go/issues
-		邮箱: qjfoidnh@126.com`
+		邮箱: `
 
 	app.Flags = []cli.Flag{
 		cli.BoolFlag{
@@ -604,8 +604,8 @@ func main() {
 			},
 		},
 		{
-			Name:        "setastoken",
-			Usage:       "设定当前账号的accessToken",
+			Name:  "setastoken",
+			Usage: "设定当前账号的accessToken",
 			Description: `
 	设定当前登录帐号的accessToken:
 	若不使用秒传链接转存, 可不设定; accessToken申请及获取教程:
@@ -615,9 +615,9 @@ func main() {
 	示例:
 	BaiduPCS-Go setastoken 156.182v9052tgf1006c89891bsfb2401974.YmKOAwBD9yGaG2s4p5NNkX4CXeIbJxx4hAxotfS.PyuHEs
 `,
-			Category:    "百度帐号",
-			Before:      reloadFn,
-			After:       saveFunc,
+			Category: "百度帐号",
+			Before:   reloadFn,
+			After:    saveFunc,
 			Action: func(c *cli.Context) error {
 				activeUser := pcsconfig.Config.ActiveUser()
 				if activeUser.UID == 0 {
@@ -1161,7 +1161,7 @@ func main() {
 					Usage: "将本地文件的修改时间设置为服务器上的修改时间",
 				},
 				cli.IntFlag{
-					Name: "dindex",
+					Name:  "dindex",
 					Usage: "使用备选下载链接中的第几个，默认第一个",
 				},
 				cli.BoolFlag{
@@ -1519,8 +1519,8 @@ func main() {
 							return nil
 						}
 						opt := &baidupcs.ShareOption{
-							Password: c.String("p"),
-							Period:   c.Int("period"),
+							Password:   c.String("p"),
+							Period:     c.Int("period"),
 							IsCombined: c.Bool("f"),
 						}
 						pcscommand.RunShareSet(c.Args(), opt)
@@ -1538,7 +1538,7 @@ func main() {
 							Value: 0,
 						},
 						cli.BoolFlag{
-							Name: "f",
+							Name:  "f",
 							Usage: "输出带密码的完整链接格式",
 						},
 					},

@@ -2,13 +2,14 @@ package pcsconfig
 
 import (
 	"fmt"
-	"github.com/olekukonko/tablewriter"
+	"os"
+	"strconv"
+
 	"github.com/milin2436/BaiduPCS-Go/baidupcs"
 	"github.com/milin2436/BaiduPCS-Go/pcstable"
 	"github.com/milin2436/BaiduPCS-Go/pcsutil/converter"
 	"github.com/milin2436/BaiduPCS-Go/requester"
-	"os"
-	"strconv"
+	"github.com/olekukonko/tablewriter"
 )
 
 // ActiveUser 获取当前登录的用户
