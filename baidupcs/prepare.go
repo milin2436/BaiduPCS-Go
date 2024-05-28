@@ -10,8 +10,8 @@ import (
 	"strings"
 	"unsafe"
 
-	"github.com/iikira/baidu-tools/tieba"
 	jsoniter "github.com/json-iterator/go"
+	"github.com/milin2436/BaiduPCS-Go/baidu-tools/tieba"
 	"github.com/milin2436/BaiduPCS-Go/baidupcs/netdisksign"
 	"github.com/milin2436/BaiduPCS-Go/baidupcs/pcserror"
 	"github.com/milin2436/BaiduPCS-Go/pcsutil/converter"

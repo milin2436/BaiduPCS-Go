@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/iikira/baidu-tools/tieba"
+	"github.com/milin2436/BaiduPCS-Go/baidu-tools/tieba"
 	"github.com/milin2436/BaiduPCS-Go/baidupcs"
 	"github.com/milin2436/BaiduPCS-Go/pcstable"
 	"github.com/milin2436/BaiduPCS-Go/pcsutil/converter"
