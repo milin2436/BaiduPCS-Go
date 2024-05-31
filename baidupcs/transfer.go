@@ -19,9 +19,10 @@ import (
 type (
 	// ShareOption 分享可选项
 	TransferOption struct {
-		Download bool // 是否直接开始下载
-		Collect  bool // 多文件整合
-		Rname    bool // 随机改文件名
+		Download bool   // 是否直接开始下载
+		Collect  bool   // 多文件整合
+		Rname    bool   // 随机改文件名
+		SaveTo   string //保存到此处
 	}
 )
 
@@ -184,22 +185,23 @@ func (pcs *BaiduPCS) GenerateRequestQuery(mode string, params map[string]string)
 		res["ErrMsg"] = "未知错误"
 		return
 	}
-	if !gjson.Valid(string(body)) {
+	jsonBody := string(body)
+	if !gjson.Valid(jsonBody) {
 		res["ErrNo"] = "2"
 		res["ErrMsg"] = "返回json解析错误"
 		return
 	}
-	fmt.Println("body =", string(body))
-	errno := gjson.Get(string(body), `errno`).Int()
+	fmt.Println("body =", jsonBody)
+	errno := gjson.Get(jsonBody, `errno`).Int()
 	if errno != 0 {
 		res["ErrNo"] = "3"
 		res["ErrMsg"] = "获取分享项元数据错误"
 		if mode == "POST" && errno == 12 {
-			path := gjson.Get(string(body), `info.0.path`).String()
+			path := gjson.Get(jsonBody, `info.0.path`).String()
 			_, file := filepath.Split(path) // Should be path.Split here, but never mind~
-			_errno := gjson.Get(string(body), `info.0.errno`).Int()
-			target_file_nums := gjson.Get(string(body), `target_file_nums`).Int()
-			target_file_nums_limit := gjson.Get(string(body), `target_file_nums_limit`).Int()
+			_errno := gjson.Get(jsonBody, `info.0.errno`).Int()
+			target_file_nums := gjson.Get(jsonBody, `target_file_nums`).Int()
+			target_file_nums_limit := gjson.Get(jsonBody, `target_file_nums_limit`).Int()
 			if target_file_nums > target_file_nums_limit {
 				res["ErrNo"] = "4"
 				res["ErrMsg"] = fmt.Sprintf("转存文件数%d超过当前用户上限, 当前用户单次最大转存数%d", target_file_nums, target_file_nums_limit)
@@ -217,8 +219,10 @@ func (pcs *BaiduPCS) GenerateRequestQuery(mode string, params map[string]string)
 		}
 		return
 	}
-	_, res["filename"] = filepath.Split(gjson.Get(string(body), `info.0.path`).String())
-	filenames := gjson.Get(string(body), `info.#.path`).Array()
+
+	//set filename information
+	_, res["filename"] = filepath.Split(gjson.Get(jsonBody, `info.0.path`).String())
+	filenames := gjson.Get(jsonBody, `info.#.path`).Array()
 	filenames_str := ""
 	for _, _path := range filenames {
 		filenames_str += "," + path.Base(_path.String())
@@ -226,6 +230,91 @@ func (pcs *BaiduPCS) GenerateRequestQuery(mode string, params map[string]string)
 	res["filenames"] = filenames_str[1:]
 	if len(gjson.Get(string(body), `info.#.fsid`).Array()) > 1 {
 		res["filename"] += "等多个文件/文件夹"
+	}
+	return
+}
+
+func (pcs *BaiduPCS) TransferShareRequestQuery(mode string, params map[string]string, fileList map[string][]string) (res map[string]string) {
+	res = make(map[string]string)
+	res["ErrNo"] = "0"
+	headers := map[string]string{
+		"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36",
+		"Referer":    params["referer"],
+	}
+	if mode == "POST" {
+		headers["Content-Type"] = "application/x-www-form-urlencoded"
+	}
+	postdata := make(map[string]string)
+	postdata["fsidlist"] = params["fs_id"]
+	postdata["path"] = params["path"]
+	fmt.Println("shareUrl=", params["shareUrl"])
+	dataReadCloser, panError := pcs.sendReqReturnReadCloser(reqTypePan, OperationShareFileSavetoLocal, mode, params["shareUrl"], postdata, headers)
+	if panError != nil {
+		res["ErrNo"] = "1"
+		res["ErrMsg"] = "网络错误"
+		return
+	}
+	defer dataReadCloser.Close()
+	body, err := ioutil.ReadAll(dataReadCloser)
+	if err != nil {
+		res["ErrNo"] = "-1"
+		res["ErrMsg"] = "未知错误"
+		return
+	}
+	jsonBody := string(body)
+	if !gjson.Valid(jsonBody) {
+		res["ErrNo"] = "2"
+		res["ErrMsg"] = "返回json解析错误"
+		return
+	}
+	fmt.Println("body =", jsonBody)
+	errno := gjson.Get(jsonBody, `errno`).Int()
+	if errno != 0 {
+		res["ErrNo"] = "3"
+		res["ErrMsg"] = "获取分享项元数据错误"
+		if mode == "POST" && errno == 12 {
+			path := gjson.Get(jsonBody, `info.0.path`).String()
+			_, file := filepath.Split(path) // Should be path.Split here, but never mind~
+			_errno := gjson.Get(jsonBody, `info.0.errno`).Int()
+			target_file_nums := gjson.Get(jsonBody, `target_file_nums`).Int()
+			target_file_nums_limit := gjson.Get(jsonBody, `target_file_nums_limit`).Int()
+			if target_file_nums > target_file_nums_limit {
+				res["ErrNo"] = "4"
+				res["ErrMsg"] = fmt.Sprintf("转存文件数%d超过当前用户上限, 当前用户单次最大转存数%d", target_file_nums, target_file_nums_limit)
+				res["limit"] = fmt.Sprintf("%d", target_file_nums_limit)
+			} else if _errno == -30 {
+				res["ErrNo"] = "9"
+				res["ErrMsg"] = fmt.Sprintf("当前目录下已有%s同名文件/文件夹", file)
+			} else {
+				res["ErrMsg"] = fmt.Sprintf("未知错误, 错误代码%d", _errno)
+			}
+		} else if mode == "POST" && errno == 4 {
+			res["ErrMsg"] = "文件重复"
+		} else {
+			res["ErrMsg"] = "server error#" + gjson.Get(string(body), `show_msg`).String()
+		}
+		return
+	}
+
+	//set filename information
+	_, res["filename"] = filepath.Split(gjson.Get(jsonBody, `info.0.path`).String())
+	filenames := gjson.Get(jsonBody, `info.#.path`).Array()
+	filenames_str := ""
+	for _, _path := range filenames {
+		filenames_str += "," + path.Base(_path.String())
+	}
+	res["filenames"] = filenames_str[1:]
+	if len(gjson.Get(string(body), `info.#.fsid`).Array()) > 1 {
+		res["filename"] += "等多个文件/文件夹"
+	}
+	if gjson.Get(jsonBody, "extra.list").Exists() {
+		list := []string{}
+		gjson.Get(jsonBody, "extra.list").ForEach(func(key, value gjson.Result) bool {
+			toFile := value.Get("to").String()
+			list = append(list, toFile)
+			fileList["list"] = list
+			return true
+		})
 	}
 	return
 }

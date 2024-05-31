@@ -2,6 +2,7 @@ package pcscommand
 
 import (
 	"encoding/base64"
+	"errors"
 	"fmt"
 	"path"
 	"regexp"
@@ -146,4 +147,128 @@ func RunRapidTransfer(link string, rnameOpt ...bool) {
 		fmt.Printf("%s失败: %s\n", baidupcs.OperationRapidLinkSavetoLocal, "秒传链接格式错误")
 	}
 	return
+}
+
+// RunShareTransfer sdk 执行分享链接转存到网盘
+func RunShareTransferForSdk(params []string, opt *baidupcs.TransferOption) error {
+	var link string
+	var extracode string
+	var msg string
+	if len(params) == 1 {
+		link = params[0]
+		if strings.Contains(link, "bdlink=") || !strings.Contains(link, "pan.baidu.com/") {
+			//RunRapidTransfer(link, opt.Rname)
+			msg = fmt.Sprintf("%s失败: %s\n", baidupcs.OperationShareFileSavetoLocal, "秒传已不再被支持")
+			fmt.Print(msg)
+			return errors.New(msg)
+		}
+		extracode = "none"
+		if strings.Contains(link, "?pwd=") {
+			extracode = strings.Split(link, "?pwd=")[1]
+			link = strings.Split(link, "?pwd=")[0]
+		}
+	} else if len(params) == 2 {
+		link = params[0]
+		extracode = params[1]
+	}
+	if link[len(link)-1:] == "/" {
+		link = link[0 : len(link)-1]
+	}
+	featurestrs := strings.Split(link, "/")
+	featurestr := featurestrs[len(featurestrs)-1]
+	if strings.Contains(featurestr, "init?") {
+		featurestr = "1" + strings.Split(featurestr, "=")[1]
+	}
+	if len(featurestr) > 23 || featurestr[0:1] != "1" || len(extracode) != 4 {
+		msg = fmt.Sprintf("%s失败: %s\n", baidupcs.OperationShareFileSavetoLocal, "链接地址或提取码非法")
+		fmt.Print(msg)
+		return errors.New(msg)
+	}
+	pcs := GetBaiduPCS()
+	tokens := pcs.AccessSharePage(featurestr, true)
+	if tokens["ErrMsg"] != "0" {
+		msg = fmt.Sprintf("%s失败: %s\n", baidupcs.OperationShareFileSavetoLocal, tokens["ErrMsg"])
+		fmt.Print(msg)
+		return errors.New(msg)
+	}
+	// pcs.UpdatePCSCookies(true)
+	var vefiryurl string
+	var randsk string
+	featuremap := make(map[string]string)
+	featuremap["bdstoken"] = tokens["bdstoken"]
+	featuremap["surl"] = featurestr[1:len(featurestr)]
+	if extracode != "none" {
+
+		vefiryurl = pcs.GenerateShareQueryURL("verify", featuremap).String()
+		res := pcs.PostShareQuery(vefiryurl, link, map[string]string{
+			"pwd":       extracode,
+			"vcode":     "",
+			"vcode_str": "",
+		})
+		if res["ErrMsg"] != "0" {
+			msg = fmt.Sprintf("%s失败: %s\n", baidupcs.OperationShareFileSavetoLocal, res["ErrMsg"])
+			fmt.Print(msg)
+			return errors.New(msg)
+		}
+		randsk = res["randsk"]
+	}
+	pcs.UpdatePCSCookies(true)
+
+	tokens = pcs.AccessSharePage(featurestr, false)
+	tokens["randsk"] = randsk
+	if tokens["ErrMsg"] != "0" {
+		msg = fmt.Sprintf("%s失败: %s\n", baidupcs.OperationShareFileSavetoLocal, tokens["ErrMsg"])
+		fmt.Print(msg)
+		return errors.New(msg)
+	}
+	metajsonstr := tokens["metajson"]
+	trans_metas := pcs.ExtractShareInfo(metajsonstr)
+
+	if trans_metas["ErrMsg"] != "0" {
+		msg = fmt.Sprintf("%s失败: %s\n", baidupcs.OperationShareFileSavetoLocal, trans_metas["ErrMsg"])
+		fmt.Print(msg)
+		return errors.New(msg)
+	}
+	if opt.SaveTo != "" {
+		trans_metas["path"] = opt.SaveTo
+		/*
+			perr := pcs.Mkdir(opt.SaveTo)
+			if perr != nil {
+				return perr
+			}
+		*/
+	} else {
+		trans_metas["path"] = GetActiveUser().Workdir
+	}
+	if trans_metas["item_num"] != "1" && opt.Collect {
+		trans_metas["filename"] += "等文件"
+		trans_metas["path"] = path.Join(GetActiveUser().Workdir, trans_metas["filename"])
+		pcs.Mkdir(trans_metas["path"])
+	}
+	trans_metas["referer"] = "https://pan.baidu.com/s/" + featurestr
+	pcs.UpdatePCSCookies(true)
+	fileList := map[string][]string{}
+	resp := pcs.TransferShareRequestQuery("POST", trans_metas, fileList)
+	if resp["ErrNo"] != "0" {
+		msg = fmt.Sprintf("%s失败: %s\n", baidupcs.OperationShareFileSavetoLocal, resp["ErrMsg"])
+		if resp["ErrNo"] == "4" {
+			trans_metas["shorturl"] = featurestr
+			pcs.SuperTransfer(trans_metas, resp["limit"]) // 试验性功能, 当前未启用
+		}
+		fmt.Print(msg)
+		return errors.New(msg)
+	}
+	if opt.Collect {
+		resp["filename"] = trans_metas["filename"]
+	}
+	fmt.Println("list = ", fileList["list"])
+	fmt.Printf("%s成功, 保存了%s到当前目录\n", baidupcs.OperationShareFileSavetoLocal, resp["filename"])
+	if opt.Download {
+		fmt.Println("即将开始下载")
+		li := fileList["list"]
+		if len(li) > 0 {
+			RunDownload(li, nil)
+		}
+	}
+	return nil
 }

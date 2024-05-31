@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/milin2436/BaiduPCS-Go/baidupcs"
 	"github.com/milin2436/BaiduPCS-Go/internal/pcscommand"
 	"github.com/milin2436/BaiduPCS-Go/internal/pcsconfig"
 	"github.com/milin2436/BaiduPCS-Go/pcsutil"
@@ -26,6 +27,20 @@ func SdkClose() {
 	//TODO
 	pcsconfig.Config.Close()
 }
-func RunDownload(paths []string) {
-	pcscommand.RunDownload(paths, nil)
+func RunDownload(paths []string, options map[string]string) {
+	op := new(pcscommand.DownloadOptions)
+	if options != nil {
+		op.SaveTo = options["saveto"]
+	}
+	pcscommand.RunDownload(paths, op)
+}
+func RunShareTransfer(params []string, opt map[string]string) error {
+	op := new(baidupcs.TransferOption)
+	if opt != nil {
+		op.SaveTo = opt["saveto"]
+		if opt["download"] == "true" {
+			op.Download = true
+		}
+	}
+	return pcscommand.RunShareTransferForSdk(params, op)
 }
