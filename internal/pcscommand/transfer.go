@@ -109,6 +109,7 @@ func RunShareTransfer(params []string, opt *baidupcs.TransferOption) {
 		fmt.Println("即将开始下载")
 		paths := strings.Split(resp["filenames"], ",")
 		paths = paths[0 : len(paths)-1]
+		fmt.Println("paths = ", paths)
 		RunDownload(paths, nil)
 	}
 }

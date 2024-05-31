@@ -2,8 +2,6 @@ package baidupcs
 
 import (
 	"fmt"
-	"github.com/milin2436/BaiduPCS-Go/requester"
-	"github.com/tidwall/gjson"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -13,6 +11,9 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/milin2436/BaiduPCS-Go/requester"
+	"github.com/tidwall/gjson"
 )
 
 type (
@@ -90,7 +91,7 @@ func (pcs *BaiduPCS) PostShareQuery(url string, referer string, data map[string]
 	dataReadCloser, panError := pcs.sendReqReturnReadCloser(reqTypePan, OperationShareFileSavetoLocal, http.MethodPost, url, data, map[string]string{
 		"User-Agent":   requester.UserAgent,
 		"Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-		"Referer": referer,
+		"Referer":      referer,
 	})
 	res = make(map[string]string)
 	if panError != nil {
@@ -169,6 +170,7 @@ func (pcs *BaiduPCS) GenerateRequestQuery(mode string, params map[string]string)
 	postdata := make(map[string]string)
 	postdata["fsidlist"] = params["fs_id"]
 	postdata["path"] = params["path"]
+	fmt.Println("shareUrl=", params["shareUrl"])
 	dataReadCloser, panError := pcs.sendReqReturnReadCloser(reqTypePan, OperationShareFileSavetoLocal, mode, params["shareUrl"], postdata, headers)
 	if panError != nil {
 		res["ErrNo"] = "1"
@@ -187,6 +189,7 @@ func (pcs *BaiduPCS) GenerateRequestQuery(mode string, params map[string]string)
 		res["ErrMsg"] = "返回json解析错误"
 		return
 	}
+	fmt.Println("body =", string(body))
 	errno := gjson.Get(string(body), `errno`).Int()
 	if errno != 0 {
 		res["ErrNo"] = "3"
@@ -208,7 +211,9 @@ func (pcs *BaiduPCS) GenerateRequestQuery(mode string, params map[string]string)
 				res["ErrMsg"] = fmt.Sprintf("未知错误, 错误代码%d", _errno)
 			}
 		} else if mode == "POST" && errno == 4 {
-			res["ErrMsg"] = fmt.Sprintf("文件重复")
+			res["ErrMsg"] = "文件重复"
+		} else {
+			res["ErrMsg"] = "server error#" + gjson.Get(string(body), `show_msg`).String()
 		}
 		return
 	}

@@ -23,15 +23,8 @@ func SdkInit() {
 }
 
 func SdkClose() {
-	defer pcsconfig.Config.Close()
-	q, u, err := pcscommand.GetBaiduPCS().QuotaInfo()
-
-	if err != nil {
-		fmt.Println("err = ", err)
-		return
-	}
-	fmt.Printf("%d\n", q)
-	fmt.Printf("%d\n", u)
+	//TODO
+	pcsconfig.Config.Close()
 }
 func RunDownload(paths []string) {
 	pcscommand.RunDownload(paths, nil)
