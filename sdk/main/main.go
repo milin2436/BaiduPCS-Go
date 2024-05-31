@@ -20,6 +20,7 @@ func tTr() {
 	defer sdk.SdkClose()
 	op := map[string]string{}
 	op["saveto"] = "/d"
+	op["dnsaveto"] = "/home/super/Downloads/papa"
 	op["download"] = "true"
 	err := sdk.RunShareTransfer([]string{"https://pan.baidu.com/s/1owdUpAEUq8rPJr4TdTUZtA?pwd=ugg4"}, op)
 	fmt.Println("err #", err)

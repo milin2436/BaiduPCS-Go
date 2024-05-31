@@ -23,6 +23,7 @@ type (
 		Collect  bool   // 多文件整合
 		Rname    bool   // 随机改文件名
 		SaveTo   string //保存到此处
+		DnSaveTo string //自动下载到此处，当Download = true
 	}
 )
 

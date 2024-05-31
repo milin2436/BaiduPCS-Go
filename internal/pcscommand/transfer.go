@@ -267,7 +267,10 @@ func RunShareTransferForSdk(params []string, opt *baidupcs.TransferOption) error
 		fmt.Println("即将开始下载")
 		li := fileList["list"]
 		if len(li) > 0 {
-			RunDownload(li, nil)
+			doptions := new(DownloadOptions)
+			doptions.SaveTo = opt.DnSaveTo
+			go RunDownload(li, doptions)
+			//notify
 		}
 	}
 	return nil

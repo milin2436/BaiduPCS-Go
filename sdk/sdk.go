@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/milin2436/BaiduPCS-Go/baidupcs"
+	"github.com/milin2436/BaiduPCS-Go/baidupcs/pcserror"
 	"github.com/milin2436/BaiduPCS-Go/internal/pcscommand"
 	"github.com/milin2436/BaiduPCS-Go/internal/pcsconfig"
 	"github.com/milin2436/BaiduPCS-Go/pcsutil"
@@ -38,9 +39,15 @@ func RunShareTransfer(params []string, opt map[string]string) error {
 	op := new(baidupcs.TransferOption)
 	if opt != nil {
 		op.SaveTo = opt["saveto"]
+		op.DnSaveTo = opt["dnsaveto"]
 		if opt["download"] == "true" {
 			op.Download = true
 		}
 	}
 	return pcscommand.RunShareTransferForSdk(params, op)
+}
+
+func RunMkdir(path string) pcserror.Error {
+	pcs := pcscommand.GetBaiduPCS()
+	return pcs.Mkdir(path)
 }
