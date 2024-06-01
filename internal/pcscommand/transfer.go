@@ -269,7 +269,7 @@ func RunShareTransferForSdk(params []string, opt *baidupcs.TransferOption) error
 		if len(li) > 0 {
 			doptions := new(DownloadOptions)
 			doptions.SaveTo = opt.DnSaveTo
-			go RunDownload(li, doptions)
+			RunDownloadForSdk(li, doptions)
 			//notify
 		}
 	}
