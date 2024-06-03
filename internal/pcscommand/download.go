@@ -1,6 +1,7 @@
 package pcscommand
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -198,52 +199,13 @@ func RunDownload(paths []string, options *DownloadOptions) {
 	}
 }
 
-func RunDownloadForSdk(paths []string, options *DownloadOptions) (retErr error) {
-	if options == nil {
-		options = &DownloadOptions{}
-	}
-
-	if options.Load <= 0 {
-		options.Load = pcsconfig.Config.MaxDownloadLoad
-	}
-
-	if options.MaxRetry < 0 {
-		options.MaxRetry = pcsdownload.DefaultDownloadMaxRetry
-	}
-
-	if !options.NoCheck {
-		options.NoCheck = pcsconfig.Config.NoCheck
-	}
-
-	if runtime.GOOS == "windows" {
-		// windows下不加执行权限
-		options.IsExecutedPermission = false
-	}
-
-	// 设置下载配置
-	cfg := &downloader.Config{
-		Mode:                       transfer.RangeGenMode_BlockSize,
-		CacheSize:                  pcsconfig.Config.CacheSize,
-		BlockSize:                  baidupcs.InitRangeSize,
-		MaxRate:                    pcsconfig.Config.MaxDownloadRate,
-		InstanceStateStorageFormat: downloader.InstanceStateStorageFormatProto3,
-		IsTest:                     options.IsTest,
-		TryHTTP:                    !pcsconfig.Config.EnableHTTPS,
-	}
-
-	// 设置下载最大并发量
-	if options.Parallel < 1 {
-		options.Parallel = pcsconfig.Config.MaxParallel
-	}
+func RunCheckDownloadTotalSize(paths []string, sizeLimit int64) (retErr error) {
 
 	paths, err := matchPathByShellPattern(paths...)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-
-	fmt.Print("\n")
-	fmt.Printf("[0] 提示: 当前下载最大并发量为: %d, 下载缓存为: %d\n", options.Parallel, cfg.CacheSize)
 
 	var (
 		pcs       = GetBaiduPCS()
@@ -262,20 +224,9 @@ func RunDownloadForSdk(paths []string, options *DownloadOptions) (retErr error) 
 			// 忽略统计文件夹数量
 			if !fd.Isdir {
 				loadCount++
-				if loadCount >= options.Load {
-					loadCount = options.Load
-				}
 			}
 			return true
 		})
-	}
-	// 修改Load, 设置MaxParallel
-	if loadCount > 0 {
-		options.Load = loadCount
-		// 取平均值
-		cfg.MaxParallel = pcsconfig.AverageParallel(options.Parallel, loadCount)
-	} else {
-		cfg.MaxParallel = options.Parallel
 	}
 
 	//check size
@@ -284,75 +235,8 @@ func RunDownloadForSdk(paths []string, options *DownloadOptions) (retErr error) 
 		totalSize = totalSize + v.Size
 	}
 	fmt.Printf("总大小:%s\n", converter.ConvertFileSize(totalSize))
-	var (
-		executor = taskframework.TaskExecutor{
-			IsFailedDeque: true, // 统计失败的列表
-		}
-		statistic = &pcsdownload.DownloadStatistic{}
-	)
-
-	// 处理队列, 小文件优先下载
-	sort.Slice(file_dir_list, func(i, j int) bool {
-		return file_dir_list[i].Size < file_dir_list[j].Size
-	})
-	for _, v := range file_dir_list {
-		newCfg := *cfg
-		unit := pcsdownload.DownloadTaskUnit{
-			Cfg:                  &newCfg, // 复制一份新的cfg
-			PCS:                  pcs,
-			VerbosePrinter:       pcsCommandVerbose,
-			PrintFormat:          downloadPrintFormat(options.Load),
-			ParentTaskExecutor:   &executor,
-			DownloadStatistic:    statistic,
-			IsPrintStatus:        options.IsPrintStatus,
-			IsExecutedPermission: options.IsExecutedPermission,
-			IsOverwrite:          options.IsOverwrite,
-			NoCheck:              options.NoCheck,
-			DlinkPrefer:          options.LinkPrefer,
-			DownloadMode:         options.DownloadMode,
-			ModifyMTime:          options.ModifyMTime,
-			PcsPath:              v.Path,
-			FileInfo:             v,
-		}
-		// 设置下载并发数
-		executor.SetParallel(loadCount)
-		// 设置储存的路径
-		vPath := v.Path
-		if !options.FullPath {
-			vPath = filepath.Join(v.PreBase, filepath.Base(v.Path))
-		}
-		if options.SaveTo != "" {
-			unit.SavePath = filepath.Join(options.SaveTo, vPath)
-		} else {
-			// 使用默认的保存路径
-			unit.SavePath = GetActiveUser().GetSavePath(vPath)
-		}
-		info := executor.Append(&unit, options.MaxRetry)
-		fmt.Printf("[%s] 加入下载队列: %s\n", info.Id(), v.Path)
+	if totalSize > sizeLimit {
+		retErr = errors.New("下载文件的总大小超出了限制！")
 	}
-	go runDownload(&executor, statistic)
 	return retErr
-}
-
-func runDownload(executor *taskframework.TaskExecutor, statistic *pcsdownload.DownloadStatistic) {
-
-	// 开始计时
-	statistic.StartTimer()
-
-	// 开始执行
-	executor.Execute()
-
-	fmt.Printf("\n下载结束, 时间: %s, 数据总量: %s\n", statistic.Elapsed()/1e6*1e6, converter.ConvertFileSize(statistic.TotalSize()))
-
-	// 输出失败的文件列表
-	failedList := executor.FailedDeque()
-	if failedList.Size() != 0 {
-		fmt.Printf("以下文件下载失败: \n")
-		tb := pcstable.NewTable(os.Stdout)
-		for e := failedList.Shift(); e != nil; e = failedList.Shift() {
-			item := e.(*taskframework.TaskInfoItem)
-			tb.Append([]string{item.Info.Id(), item.Unit.(*pcsdownload.DownloadTaskUnit).PcsPath})
-		}
-		tb.Render()
-	}
 }

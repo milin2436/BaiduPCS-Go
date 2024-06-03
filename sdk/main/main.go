@@ -19,9 +19,11 @@ func tdn() {
 func tTr() {
 	defer sdk.SdkClose()
 	op := map[string]string{}
-	op["saveto"] = "/d"
+	op["saveto"] = "/d/fsf1"
 	op["dnsaveto"] = "/home/super/Downloads/papa"
 	op["download"] = "true"
+
+	sdk.RunMkdir(op["saveto"])
 	err := sdk.RunShareTransfer([]string{"https://pan.baidu.com/s/1owdUpAEUq8rPJr4TdTUZtA?pwd=ugg4"}, op)
 	fmt.Println("err #", err)
 }

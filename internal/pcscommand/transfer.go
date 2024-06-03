@@ -263,15 +263,12 @@ func RunShareTransferForSdk(params []string, opt *baidupcs.TransferOption) error
 	}
 	fmt.Println("list = ", fileList["list"])
 	fmt.Printf("%s成功, 保存了%s到当前目录\n", baidupcs.OperationShareFileSavetoLocal, resp["filename"])
-	if opt.Download {
-		fmt.Println("即将开始下载")
-		li := fileList["list"]
-		if len(li) > 0 {
-			doptions := new(DownloadOptions)
-			doptions.SaveTo = opt.DnSaveTo
-			RunDownloadForSdk(li, doptions)
-			//notify
-		}
+
+	li := fileList["list"]
+	if len(li) > 0 {
+		return RunCheckDownloadTotalSize(li, sizeLimit)
 	}
 	return nil
 }
+
+const sizeLimit = int64(1024 * 1024 * 1024 * 10)
