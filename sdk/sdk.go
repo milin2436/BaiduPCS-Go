@@ -36,7 +36,7 @@ func RunDownload(paths []string, options map[string]string) {
 	pcscommand.RunDownload(paths, op)
 }
 
-func RunShareTransfer(params []string, opt map[string]string) error {
+func RunShareTransfer(params []string, opt map[string]string) ([]string, error) {
 	op := new(baidupcs.TransferOption)
 	if opt != nil {
 		op.SaveTo = opt["saveto"]

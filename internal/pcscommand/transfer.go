@@ -150,7 +150,7 @@ func RunRapidTransfer(link string, rnameOpt ...bool) {
 }
 
 // RunShareTransfer sdk 执行分享链接转存到网盘
-func RunShareTransferForSdk(params []string, opt *baidupcs.TransferOption) error {
+func RunShareTransferForSdk(params []string, opt *baidupcs.TransferOption) ([]string, error) {
 	var link string
 	var extracode string
 	var msg string
@@ -160,7 +160,7 @@ func RunShareTransferForSdk(params []string, opt *baidupcs.TransferOption) error
 			//RunRapidTransfer(link, opt.Rname)
 			msg = fmt.Sprintf("%s失败: %s\n", baidupcs.OperationShareFileSavetoLocal, "秒传已不再被支持")
 			fmt.Print(msg)
-			return errors.New(msg)
+			return nil, errors.New(msg)
 		}
 		extracode = "none"
 		if strings.Contains(link, "?pwd=") {
@@ -182,14 +182,14 @@ func RunShareTransferForSdk(params []string, opt *baidupcs.TransferOption) error
 	if len(featurestr) > 23 || featurestr[0:1] != "1" || len(extracode) != 4 {
 		msg = fmt.Sprintf("%s失败: %s\n", baidupcs.OperationShareFileSavetoLocal, "链接地址或提取码非法")
 		fmt.Print(msg)
-		return errors.New(msg)
+		return nil, errors.New(msg)
 	}
 	pcs := GetBaiduPCS()
 	tokens := pcs.AccessSharePage(featurestr, true)
 	if tokens["ErrMsg"] != "0" {
 		msg = fmt.Sprintf("%s失败: %s\n", baidupcs.OperationShareFileSavetoLocal, tokens["ErrMsg"])
 		fmt.Print(msg)
-		return errors.New(msg)
+		return nil, errors.New(msg)
 	}
 	// pcs.UpdatePCSCookies(true)
 	var vefiryurl string
@@ -208,7 +208,7 @@ func RunShareTransferForSdk(params []string, opt *baidupcs.TransferOption) error
 		if res["ErrMsg"] != "0" {
 			msg = fmt.Sprintf("%s失败: %s\n", baidupcs.OperationShareFileSavetoLocal, res["ErrMsg"])
 			fmt.Print(msg)
-			return errors.New(msg)
+			return nil, errors.New(msg)
 		}
 		randsk = res["randsk"]
 	}
@@ -219,7 +219,7 @@ func RunShareTransferForSdk(params []string, opt *baidupcs.TransferOption) error
 	if tokens["ErrMsg"] != "0" {
 		msg = fmt.Sprintf("%s失败: %s\n", baidupcs.OperationShareFileSavetoLocal, tokens["ErrMsg"])
 		fmt.Print(msg)
-		return errors.New(msg)
+		return nil, errors.New(msg)
 	}
 	metajsonstr := tokens["metajson"]
 	trans_metas := pcs.ExtractShareInfo(metajsonstr)
@@ -227,7 +227,7 @@ func RunShareTransferForSdk(params []string, opt *baidupcs.TransferOption) error
 	if trans_metas["ErrMsg"] != "0" {
 		msg = fmt.Sprintf("%s失败: %s\n", baidupcs.OperationShareFileSavetoLocal, trans_metas["ErrMsg"])
 		fmt.Print(msg)
-		return errors.New(msg)
+		return nil, errors.New(msg)
 	}
 	if opt.SaveTo != "" {
 		trans_metas["path"] = opt.SaveTo
@@ -256,7 +256,7 @@ func RunShareTransferForSdk(params []string, opt *baidupcs.TransferOption) error
 			pcs.SuperTransfer(trans_metas, resp["limit"]) // 试验性功能, 当前未启用
 		}
 		fmt.Print(msg)
-		return errors.New(msg)
+		return nil, errors.New(msg)
 	}
 	if opt.Collect {
 		resp["filename"] = trans_metas["filename"]
@@ -266,9 +266,9 @@ func RunShareTransferForSdk(params []string, opt *baidupcs.TransferOption) error
 
 	li := fileList["list"]
 	if len(li) > 0 {
-		return RunCheckDownloadTotalSize(li, sizeLimit)
+		return li, RunCheckDownloadTotalSize(li, sizeLimit)
 	}
-	return nil
+	return li, nil
 }
 
 const sizeLimit = int64(1024 * 1024 * 1024 * 10)
