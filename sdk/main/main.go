@@ -24,10 +24,14 @@ func tTr() {
 	op["download"] = "true"
 
 	sdk.RunMkdir(op["saveto"])
-	paths, err := sdk.RunShareTransfer([]string{"https://pan.baidu.com/s/1owdUpAEUq8rPJr4TdTUZtA?pwd=ugg4"}, op)
+	paths, err := sdk.RunShareTransfer([]string{"https://pan.baidu.com/s/1GjVLYb-VIEShjouLllEnbw?pwd=36pt"}, op)
 	fmt.Println("err #", err)
 	fmt.Println("paths #", paths)
 }
+func tRm() {
+	defer sdk.SdkClose()
+	sdk.RunRemove("/d/UEi0SbEFkfE")
+}
 func main() {
-	tTr()
+	tRm()
 }

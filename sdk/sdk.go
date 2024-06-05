@@ -52,3 +52,6 @@ func RunMkdir(path string) pcserror.Error {
 	pcs := pcscommand.GetBaiduPCS()
 	return pcs.Mkdir(path)
 }
+func RunRemove(paths ...string) {
+	pcscommand.RunRemove(paths...)
+}
