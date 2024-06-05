@@ -19,12 +19,12 @@ func tdn() {
 func tTr() {
 	defer sdk.SdkClose()
 	op := map[string]string{}
-	op["saveto"] = "/d/fsf2"
+	op["saveto"] = "/d/test001"
 	op["dnsaveto"] = "/home/super/Downloads/papa"
 	op["download"] = "true"
 
 	sdk.RunMkdir(op["saveto"])
-	paths, err := sdk.RunShareTransfer([]string{"https://pan.baidu.com/s/1GjVLYb-VIEShjouLllEnbw?pwd=36pt"}, op)
+	paths, err := sdk.RunShareTransfer([]string{"https://pan.baidu.com/s/1UZFN-tIq-LUoBPc7hUCZYg?pwd=8962"}, op)
 	fmt.Println("err #", err)
 	fmt.Println("paths #", paths)
 }
@@ -33,5 +33,5 @@ func tRm() {
 	sdk.RunRemove("/d/UEi0SbEFkfE")
 }
 func main() {
-	tRm()
+	tTr()
 }

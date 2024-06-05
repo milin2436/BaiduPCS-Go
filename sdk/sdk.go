@@ -45,7 +45,11 @@ func RunShareTransfer(params []string, opt map[string]string) ([]string, error) 
 			op.Download = true
 		}
 	}
-	return pcscommand.RunShareTransferForSdk(params, op)
+	li, err := pcscommand.RunShareTransferForSdk(params, op)
+	if err != nil && op.SaveTo != "" {
+		RunRemove(op.SaveTo)
+	}
+	return li, err
 }
 
 func RunMkdir(path string) pcserror.Error {
